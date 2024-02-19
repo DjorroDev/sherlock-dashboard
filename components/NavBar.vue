@@ -22,7 +22,7 @@ const links = [
 
 <template>
   <header>
-    <nav class="relative mb-16">
+    <nav class="relative mb-16 z-10">
       <UHorizontalNavigation
         :links="links"
         class="flex justify-center fixed top-0 left-0 right-0 border-b border-gray-200 dark:border-gray-800 bg-gray-950"

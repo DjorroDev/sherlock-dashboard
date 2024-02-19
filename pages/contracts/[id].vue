@@ -42,9 +42,16 @@ await $fetch(`/api/get/location-by-id?id=${route.params.id}`).then((res) => {
       </p>
       <p>{{ useTimeAgo(new Date(location.created_at)) }}</p>
     </template>
-    <p>Accuracy: {{ location.accuracy }}</p>
+    <p>
+      Accuracy:
+      <span v-if="location.accuracy == 0" class="text-rose-400">error</span>
+      <span v-else class="text-primary">{{ location.accuracy }}</span>
+    </p>
     <p>Latitude, Longitude:</p>
-    <p>{{ location.latitude }}, {{ location.longitude }}</p>
+    <p class="text-rose-400" v-if="location.latitude === 'Infinity'">
+      {{ location.latitude }}, {{ location.longitude }}
+    </p>
+    <p v-else class="text-primary">{{ location.latitude }}, {{ location.longitude }}</p>
     <template #footer>
       <UButton
         target="_blank"
