@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   ssr: true,
   runtimeConfig: {
     public: {
+      serverTo: "http://localhost:3001",
       cloudinaryCloudName: "",
       cloudinaryApiSecret: "",
       serverLink: "http://127.0.0.1:5000",

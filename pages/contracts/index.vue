@@ -2,6 +2,8 @@
 const { data, pending, error } = await useFetch("/api/get/contracts");
 const toast = useToast();
 
+const config = useRuntimeConfig();
+
 const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
 
 // console.log(data.value.data);
@@ -24,13 +26,12 @@ const { copy } = useClipboard({ source });
       <p>Kelurahan: {{ contract.address.kelurahan }}</p>
       <p>asset: motor</p>
       <p class="text-sm mt-2 -mb-3">
-        {{ new Date(contract.created_at).toLocaleTimeString("en-GB") }}
-        {{ new Date(contract.created_at).toLocaleDateString() }}
+        tanggal: {{ new Date(contract.created_at).toLocaleTimeString("id", options) }}
       </p>
       <template #footer>
         <UButton
           @click="
-            copy('localhost:3001/' + contract.customer.name.replaceAll(' ', '-')),
+            copy(config.public.serverTo + '/' + contract.customer.name.replaceAll(' ', '-')),
               toast.add({ title: `Link has been copied!`, icon: `i-heroicons-check` })
           "
           >Copy Generated link</UButton
