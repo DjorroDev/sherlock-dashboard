@@ -2,6 +2,9 @@
 const toast = useToast();
 const config = useRuntimeConfig();
 
+const isSubmitting = ref(false);
+const isUploading = ref(false);
+
 const state = reactive({
   application_id: undefined,
   address: {
@@ -16,7 +19,7 @@ const state = reactive({
   status: undefined,
   data: undefined,
   created_by: {
-    id: 944671939348529153,
+    id: "944671939348529153",
     name: "",
   },
 });
@@ -34,6 +37,7 @@ const validate = (states) => {
 const data = ref(undefined);
 
 async function handleFileChange(event) {
+  isUploading.value = true;
   data.value = event.target.files[0];
   const formData = new FormData();
   // console.log(data.value);
@@ -58,11 +62,13 @@ async function handleFileChange(event) {
     }
   )
     .then((result) => {
+      isUploading.value = false;
       console.log(result.public_id, +" " + result.secure_url);
       state.data = result.secure_url;
       toast.add({ title: "Success upload img", icon: "i-heroicons-check-circle" });
     })
     .catch((err) => {
+      isUploading.value = false;
       toast.add({
         title: "fail upload" + err,
         icon: "i-heroicons-exclamation-circle",
@@ -77,17 +83,20 @@ async function handleFileChange(event) {
 // }
 
 async function onSubmit(event) {
+  isSubmitting.value = true;
   // console.log(state);
   await $fetch(`${config.public.serverLink}/api/contracts/`, {
     method: "POST",
-    // mode: "no-cors",
+    mode: "no-cors",
     body: JSON.stringify(state),
   })
     .then((result) => {
       toast.add({ title: "Success make new contract" });
+      isSubmitting.value = false;
       navigateTo("/contracts");
     })
     .catch((err) => {
+      isSubmitting.value = false;
       toast.add({
         title: "error:" + err,
         icon: "i-heroicons-exclamation-circle",
@@ -98,6 +107,12 @@ async function onSubmit(event) {
 </script>
 
 <template>
+  <UModal v-model="isSubmitting" prevent-close>
+    <div class="flex flex-col justify-center items-center min-h-24 px-3 gap-2">
+      <div class="text-4xl text-primary">LOADING..</div>
+      <UProgress animation="carousel" />
+    </div>
+  </UModal>
   <h1 class="text-4xl mb-10">Create New Contract</h1>
   <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="ID Application" name="application_id">
@@ -115,6 +130,7 @@ async function onSubmit(event) {
     <UFormGroup label="data (poto tabel)" name="data" @change="handleFileChange($event)">
       <UInput type="file" :required="true" />
     </UFormGroup>
+    <UProgress v-if="isUploading" animation="carousel" color="yellow" />
 
     <p class="text-green-400" v-if="state.data">
       Upload Done <UIcon name="i-heroicons-check-circle" />
