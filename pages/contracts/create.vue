@@ -16,7 +16,7 @@ const state = reactive({
   status: undefined,
   data: undefined,
   created_by: {
-    id: 1,
+    id: 944671939348529153,
     name: "",
   },
 });
@@ -53,7 +53,7 @@ async function handleFileChange(event) {
     `https://api.cloudinary.com/v1_1/${config.public.cloudinaryCloudName}/image/upload`,
     {
       method: "POST",
-      mode: "cors",
+      // mode: "cors",
       body: formData,
     }
   )
@@ -80,7 +80,7 @@ async function onSubmit(event) {
   // console.log(state);
   await $fetch(`${config.public.serverLink}/api/contracts/`, {
     method: "POST",
-    mode: "no-cors",
+    // mode: "no-cors",
     body: JSON.stringify(state),
   })
     .then((result) => {
